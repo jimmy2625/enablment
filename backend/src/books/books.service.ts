@@ -40,7 +40,7 @@ export class BooksService {
     }
   }
 
-  async updateBook(id: number, data: any) {
+  async updateBook(id: any, data: any) {
     try {
       const updatedBook = await this.prismaService.client.book.update({
         where: { id },

@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import BookList from './components/BookList';
+import BookDetail from './components/BookDetail';
+import BookForm from './components/BookForm';
+import AuthorList from './components/AuthorList';
 
-function App() {
+const NotFound = () => {
+  return <div>404 Not Found</div>;
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<BookList />} />
+        <Route path="/books/:id" element={<BookDetail />} />
+        <Route path="/books/add" element={<BookForm />} />
+        <Route path="/books/:id/edit" element={<BookForm />} />
+        <Route path="/authors" element={<AuthorList />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
