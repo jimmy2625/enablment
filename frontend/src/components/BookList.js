@@ -74,7 +74,6 @@ const BookList = () => {
   };
 
   const handleShowAuthorList = () => {
-    // Navigate to the "/authors" route
     navigate('/authors');
   };
 
@@ -116,7 +115,7 @@ const BookList = () => {
         />
       )}
 
-      <button className="show-authors-button" onClick={handleShowAuthorList}>
+      <button className="form-button" onClick={handleShowAuthorList}>
         Show Author List
       </button>
     </div>

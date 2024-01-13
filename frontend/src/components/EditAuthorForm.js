@@ -1,0 +1,88 @@
+// src/components/EditAuthorForm.js
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './styles.css';
+
+const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
+  const [author, setAuthor] = useState({
+    name: '',
+    bio: '',
+  });
+
+  const [isFormVisible, setIsFormVisible] = useState(true);
+
+  useEffect(() => {
+    const fetchAuthorDetails = async () => {
+      try {
+        const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
+        setAuthor(authorResponse.data);
+      } catch (error) {
+        console.error('Error fetching author details:', error);
+      }
+    };
+
+    fetchAuthorDetails();
+  }, [authorId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setAuthor((prevAuthor) => ({
+      ...prevAuthor,
+      [name]: value,
+    }));
+  };
+
+  const handleEditAuthor = async () => {
+    try {
+      await axios.put(`http://localhost:3000/authors/${authorId}`, author);
+
+      onUpdate(); // Trigger the parent component's update
+      onClose();
+
+      setIsFormVisible(false);
+    } catch (error) {
+      console.error('Error editing author:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    onClose();
+    setIsFormVisible(false);
+  };
+
+  return (
+    <>
+      {isFormVisible && (
+        <div className="book-container">
+          <h3>Edit Author</h3>
+          <form className="book-form">
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={author.name}
+              onChange={handleChange}
+            />
+
+            <label>Bio:</label>
+            <textarea
+              name="bio"
+              value={author.bio}
+              onChange={handleChange}
+            ></textarea>
+
+            <button type="button" className="save-changes-button" onClick={handleEditAuthor}>
+              Save Changes
+            </button>
+            <button type="button" className="cancel-button" onClick={handleCancel}>
+              Cancel
+            </button>
+          </form>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default EditAuthorForm;

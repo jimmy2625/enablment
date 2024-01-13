@@ -66,7 +66,7 @@ const EditBookForm = ({ bookId, onClose, onUpdate }) => {
     <>
       {isFormVisible && (
         <div className="book-container">
-          <h2>Edit Book</h2>
+          <h3>Edit Book</h3>
           <form className="book-form">
             <label>Title:</label>
             <input

@@ -1,9 +1,16 @@
-// src/components/AuthorList.js
-import React, { useEffect, useState } from 'react';
+// AuthorList.js
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AddAuthor from './AddAuthor';
+import EditAuthorForm from './EditAuthorForm';
+import './styles.css';
 
 const AuthorList = () => {
   const [authors, setAuthors] = useState([]);
+  const [expandedAuthorId, setExpandedAuthorId] = useState(null);
+  const [showAddAuthorForm, setShowAddAuthorForm] = useState(false);
+  const [showEditAuthorForm, setShowEditAuthorForm] = useState(false);
+  const [selectedAuthorId, setSelectedAuthorId] = useState(null);
 
   useEffect(() => {
     const fetchAuthors = async () => {
@@ -18,13 +25,65 @@ const AuthorList = () => {
     fetchAuthors();
   }, []);
 
+  const toggleAuthorDetails = (authorId) => {
+    setExpandedAuthorId((prevId) => (prevId === authorId ? null : authorId));
+  };
+
+  const handleEditAuthor = (authorId) => {
+    setSelectedAuthorId(authorId);
+    setShowEditAuthorForm(true);
+  };
+
+  const handleDeleteAuthor = async (authorId) => {
+    try {
+      await axios.delete(`http://localhost:3000/authors/${authorId}`);
+      setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
+      setExpandedAuthorId(null); // Collapse details after deleting an author
+    } catch (error) {
+      console.error('Error deleting author:', error);
+    }
+  };
+
   return (
-    <div>
-      <h2>Author List</h2>
-      <ul>
+    <div className="container">
+      <h1 className="book-list-title">Author List</h1>
+      <button className="form-button" onClick={() => setShowAddAuthorForm(!showAddAuthorForm)}>
+        {showAddAuthorForm ? 'Hide Add Author Form' : 'Add Author'}
+      </button>
+      {showAddAuthorForm && <AddAuthor setAuthors={setAuthors} setShowAddAuthorForm={setShowAddAuthorForm} />}
+      {showEditAuthorForm && (
+        <EditAuthorForm
+          authorId={selectedAuthorId}
+          onClose={() => setShowEditAuthorForm(false)}
+          onUpdate={() => {
+            axios.get('http://localhost:3000/authors').then((response) => setAuthors(response.data));
+          }}
+        />
+      )}
+      <ul className="book-list">
         {authors.map((author) => (
-          <li key={author.id}>
-            <strong>{author.name}</strong> - {author.bio}
+          <li key={author.id} className="book-item">
+            <div className="book-item-header" onClick={() => toggleAuthorDetails(author.id)}>
+              <span className="book-item-title">{author.name}</span>
+            </div>
+            {expandedAuthorId === author.id && (
+              <div className="book-details">
+                <p>{author.bio}</p>
+                <h3>Books by {author.name}</h3>
+                <ul>
+                  {author.books.map((book) => (
+                    <li key={book.id}>
+                      <p>Title: {book.title}</p>
+                      <p>Published Year: {book.publishedYear}</p>
+                    </li>
+                  ))}
+                </ul>
+                <div className="author-buttons">
+                  <button className="form-button" onClick={() => handleEditAuthor(author.id)}>Edit</button>
+                  <button className="delete-button" onClick={() => handleDeleteAuthor(author.id)}>Delete</button>
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>
