@@ -106,7 +106,7 @@ const AddBook = ({ setBooks, setShowAddBookForm }) => {
           onChange={handleChange}
         />
 
-        <button type="button" onClick={handleAddBook}>
+        <button type="button" className="save-changes-button" onClick={handleAddBook}>
           Add Book
         </button>
       </form>

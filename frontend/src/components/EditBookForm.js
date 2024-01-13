@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './styles.css';
 
-const EditBookForm = ({ bookId, onCancel }) => {
+const EditBookForm = ({ bookId, onClose, onUpdate }) => {
   const [book, setBook] = useState({
     title: '',
     authorId: '',
@@ -35,7 +35,9 @@ const EditBookForm = ({ bookId, onCancel }) => {
     const { name, value } = e.target;
 
     const newValue =
-      name === 'stockCount' && value !== '' ? parseInt(value, 10) : value;
+    (name === 'publishedYear' || name === 'stockCount' || name === 'authorId') && value !== ''
+    ? parseInt(value, 10)
+    : value;
     setBook((prevBook) => ({
       ...prevBook,
       [name]: newValue,
@@ -45,6 +47,10 @@ const EditBookForm = ({ bookId, onCancel }) => {
   const handleEditBook = async () => {
     try {
       await axios.put(`http://localhost:3000/books/${bookId}`, book);
+
+      onUpdate(); // Trigger the parent component's update
+      onClose();
+
       setIsFormVisible(false);
     } catch (error) {
       console.error('Error editing book:', error);
@@ -52,6 +58,7 @@ const EditBookForm = ({ bookId, onCancel }) => {
   };
 
   const handleCancel = () => {
+    onClose();
     setIsFormVisible(false);
   };
 
@@ -107,10 +114,10 @@ const EditBookForm = ({ bookId, onCancel }) => {
               onChange={handleChange}
             />
 
-            <button type="button" onClick={handleEditBook}>
+            <button type="button" className="save-changes-button" onClick={handleEditBook} >
               Save Changes
             </button>
-            <button type="button" onClick={handleCancel}>
+            <button type="button" className="cancel-button" onClick={handleCancel} >
               Cancel
             </button>
           </form>

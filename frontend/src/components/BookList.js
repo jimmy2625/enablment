@@ -1,40 +1,66 @@
 // BookList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import EditBookForm from './EditBookForm';
-import AddBook from './AddBook'
+import AddBook from './AddBook';
 import './styles.css';
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
+  const [author, setAuthor] = useState(null);
   const [expandedBookId, setExpandedBookId] = useState(null);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showAddBookForm, setShowAddBookForm] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchBooks = async () => {
-      const response = await axios.get('http://localhost:3000/books');
-      setBooks(response.data);
+      try {
+        const response = await axios.get('http://localhost:3000/books');
+        setBooks(response.data);
+      } catch (error) {
+        console.error('Error fetching book list:', error);
+      }
     };
 
     fetchBooks();
   }, []);
 
-  const toggleDetails = (bookId) => {
-    setExpandedBookId((prevId) => (prevId === bookId ? null : bookId));
+  const toggleDetails = async (bookId) => {
+    try {
+      setExpandedBookId((prevId) => (prevId === bookId ? null : bookId));
+
+      if (expandedBookId !== bookId) {
+        const book = books.find((book) => book.id === bookId);
+        setExpandedBookId(bookId);
+
+        const authorResponse = await axios.get(`http://localhost:3000/authors/${book.authorId}`);
+        setAuthor(authorResponse.data);
+      }
+    } catch (error) {
+      console.error('Error toggling book details:', error);
+    }
   };
 
-  const handleEdit = (bookId) => {
-    setExpandedBookId(bookId);
+  const handleEdit = () => {
     setShowEditForm(true);
   };
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/books');
-      setBooks(response.data);
+      const response = await axios.get(`http://localhost:3000/books/${expandedBookId}`);
+      const updatedBook = response.data;
+  
+      setBooks((prevBooks) =>
+        prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
+      );
+  
+      const authorResponse = await axios.get(`http://localhost:3000/authors/${updatedBook.authorId}`);
+      setAuthor(authorResponse.data);
     } catch (error) {
-      console.error('Error updating book list', error);
+      console.error('Error updating book details', error);
     }
   };
 
@@ -47,6 +73,11 @@ const BookList = () => {
     }
   };
 
+  const handleShowAuthorList = () => {
+    // Navigate to the "/authors" route
+    navigate('/authors');
+  };
+
   return (
     <div className="container">
       <h1 className="book-list-title">Book List</h1>
@@ -54,7 +85,7 @@ const BookList = () => {
         {showAddBookForm ? 'Hide Add Book Form' : 'Add Book'}
       </button>
 
-      {showAddBookForm  && <AddBook setBooks={setBooks} setShowAddBookForm={setShowAddBookForm}/>}
+      {showAddBookForm && <AddBook setBooks={setBooks} setShowAddBookForm={setShowAddBookForm} />}
       <ul className="book-list">
         {books.map((book) => (
           <li key={book.id} className="book-item">
@@ -63,13 +94,14 @@ const BookList = () => {
             </div>
             {expandedBookId === book.id && (
               <div className="book-details">
-                <p>{book.description}</p>
+                <p>Description: {book.description}</p>
+                {author && <p>Author: {author.name}</p>}
                 <p>Published Year: {book.publishedYear}</p>
                 <p>Stock Count: {book.stockCount}</p>
-                
+
                 <div className="book-details-buttons">
-                  <button onClick={() => handleEdit(book.id)}>Edit</button>
-                  <button onClick={() => handleDelete(book.id)}>Delete</button>
+                  <button className="form-button" onClick={() => handleEdit(book.id)}>Edit</button>
+                  <button className="delete-button" onClick={() => handleDelete(book.id)} >Delete</button>
                 </div>
               </div>
             )}
@@ -83,6 +115,10 @@ const BookList = () => {
           onUpdate={handleUpdate}
         />
       )}
+
+      <button className="show-authors-button" onClick={handleShowAuthorList}>
+        Show Author List
+      </button>
     </div>
   );
 };

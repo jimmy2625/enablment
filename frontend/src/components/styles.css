@@ -50,77 +50,79 @@
     padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
+    margin: 5px;
 }
   
 .form-button:hover {
     background-color: #0056b3;
 }
 
+.book-form-container {
+    width: 50%;
+    margin: auto;
+}
+
+.book-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.book-form label {
+    margin-bottom: 8px;
+}
+
+.book-form input,
+.book-form textarea,
+.book-form select {
+    margin-bottom: 16px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.save-changes-button {
+    background-color: #41d62d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+.save-changes-button:hover {
+    background-color: #447913;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
 .delete-button {
-    background-color: #ff0800;
+    background-color: #dc3545;
     color: #fff;
     border: none;
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
-    margin-right: 5px;
+    margin: 5px;
 }
-
+  
 .delete-button:hover {
-    background-color: #b2180a;
-}
-
-.edit-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-left: 5px;
-}
-
-.edit-button:hover {
-    background-color: #0056b3;
-}
-
-.book-form-container {
-  width: 50%;
-  margin: auto;
-}
-
-.book-form {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  margin: auto;
-  margin-top: 20px;
-}
-
-.book-form label {
-  margin-bottom: 8px;
-}
-
-.book-form input,
-.book-form textarea,
-.book-form select {
-  margin-bottom: 16px;
-  padding: 8px;
-  font-size: 14px;
-}
-
-.book-form button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.book-form button:hover {
-  background-color: #0056b3;
+    background-color: #c82333;
 }
