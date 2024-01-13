@@ -1,11 +1,10 @@
-// src/components/BookDetail.js
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';  // Import useHistory
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import './styles.css';
 
 const BookDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();  // Create a history object
   const [book, setBook] = useState(null);
 
   useEffect(() => {
@@ -24,8 +23,6 @@ const BookDetail = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:3000/books/${id}`);
-      console.log('Book deleted successfully!');
-      navigate('/');  // Redirect to the book list after deletion
     } catch (error) {
       console.error('Error deleting book:', error);
     }
@@ -42,7 +39,7 @@ const BookDetail = () => {
       <p>Published Year: {book.publishedYear}</p>
       <p>Stock Count: {book.stockCount}</p>
       <Link to={`/books/${id}/edit`}>Edit</Link>
-      <button onClick={handleDelete}>Delete</button>
+      <button onClick={handleDelete} className="delete-button">Delete </button>
     </div>
   );
 };
