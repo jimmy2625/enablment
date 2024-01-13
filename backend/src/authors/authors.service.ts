@@ -43,7 +43,7 @@ export class AuthorsService {
     }
   }
 
-  async updateAuthor(id: number, data: any) {
+  async updateAuthor(id: any, data: any) {
     try {
       const updatedAuthor = await this.prismaService.client.author.update({
         where: { id },

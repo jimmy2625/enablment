@@ -34,11 +34,34 @@ const AuthorList = () => {
     setShowEditAuthorForm(true);
   };
 
+  const handleUpdateAuthor = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/authors/${selectedAuthorId}`);
+      const updatedAuthor = response.data;
+  
+      setAuthors((prevAuthors) =>
+        prevAuthors.map((author) => (author.id === updatedAuthor.id ? updatedAuthor : author))
+      );
+    } catch (error) {
+      console.error('Error updating author details', error);
+    }
+  };
+
   const handleDeleteAuthor = async (authorId) => {
     try {
-      await axios.delete(`http://localhost:3000/authors/${authorId}`);
-      setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
-      setExpandedAuthorId(null); // Collapse details after deleting an author
+      // Fetch the author to check for associated books
+      const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
+      const author = authorResponse.data;
+
+      if (author.books.length > 0) {
+        // Author has associated books, handle deletion accordingly
+        console.log('Author has associated books. Perform appropriate actions.');
+      } else {
+        // Author has no associated books, proceed with deletion
+        await axios.delete(`http://localhost:3000/authors/${authorId}`);
+        setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
+        setExpandedAuthorId(null); // Collapse details after deleting an author
+      }
     } catch (error) {
       console.error('Error deleting author:', error);
     }
@@ -55,9 +78,7 @@ const AuthorList = () => {
         <EditAuthorForm
           authorId={selectedAuthorId}
           onClose={() => setShowEditAuthorForm(false)}
-          onUpdate={() => {
-            axios.get('http://localhost:3000/authors').then((response) => setAuthors(response.data));
-          }}
+          onUpdate={handleUpdateAuthor}
         />
       )}
       <ul className="book-list">

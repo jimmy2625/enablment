@@ -1,4 +1,4 @@
-// src/components/EditAuthorForm.js
+// EditAuthorForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './styles.css';
@@ -14,8 +14,8 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
   useEffect(() => {
     const fetchAuthorDetails = async () => {
       try {
-        const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
-        setAuthor(authorResponse.data);
+        const response = await axios.get(`http://localhost:3000/authors/${authorId}`);
+        setAuthor(response.data);
       } catch (error) {
         console.error('Error fetching author details:', error);
       }
@@ -26,7 +26,6 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setAuthor((prevAuthor) => ({
       ...prevAuthor,
       [name]: value,
@@ -35,17 +34,20 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
 
   const handleEditAuthor = async () => {
     try {
-      await axios.put(`http://localhost:3000/authors/${authorId}`, author);
-
+      await axios.put(`http://localhost:3000/authors/${author.id}`, {
+        name: author.name,
+        bio: author.bio,
+      });
+  
       onUpdate(); // Trigger the parent component's update
       onClose();
-
       setIsFormVisible(false);
     } catch (error) {
-      console.error('Error editing author:', error);
+      console.error('Error editing author:', error.response || error.message || error);
     }
   };
-
+  
+  
   const handleCancel = () => {
     onClose();
     setIsFormVisible(false);
@@ -55,7 +57,7 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
     <>
       {isFormVisible && (
         <div className="book-container">
-          <h3>Edit Author</h3>
+          <h2>Edit Author</h2>
           <form className="book-form">
             <label>Name:</label>
             <input
@@ -70,7 +72,7 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
               name="bio"
               value={author.bio}
               onChange={handleChange}
-            ></textarea>
+            />
 
             <button type="button" className="save-changes-button" onClick={handleEditAuthor}>
               Save Changes
