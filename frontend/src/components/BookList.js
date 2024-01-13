@@ -27,7 +27,6 @@ const BookList = () => {
   const handleEdit = (bookId) => {
     setExpandedBookId(bookId);
     setShowEditForm(true);
-    handleUpdate();
   };
 
   const handleUpdate = async () => {
@@ -55,7 +54,7 @@ const BookList = () => {
         {showAddBookForm ? 'Hide Add Book Form' : 'Add Book'}
       </button>
 
-      {showAddBookForm  && <AddBook />}
+      {showAddBookForm  && <AddBook setBooks={setBooks} setShowAddBookForm={setShowAddBookForm}/>}
       <ul className="book-list">
         {books.map((book) => (
           <li key={book.id} className="book-item">
