@@ -1,9 +1,9 @@
 // EditAuthorForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles.css';
 
 const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
   const [author, setAuthor] = useState({

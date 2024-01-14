@@ -34,4 +34,12 @@ export class AuthorsService {
       where: { id },
     });
   }
+
+  async getBooksByAuthorId(authorId: number) {
+    return this.prismaService.client.book.findMany({
+      where: {
+        authorId: authorId,
+      },
+    });
+  }
 }
