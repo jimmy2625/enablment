@@ -4,6 +4,7 @@
 
 type AuthorType {
   bio: String!
+  books: [BookType!]
   id: ID!
   name: String!
 }

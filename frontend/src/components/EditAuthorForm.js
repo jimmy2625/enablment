@@ -55,7 +55,6 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
     }
   };
   
-  
   const handleCancel = () => {
     onClose();
     setIsFormVisible(false);

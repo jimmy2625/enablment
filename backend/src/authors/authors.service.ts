@@ -8,7 +8,8 @@ export class AuthorsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getAllAuthors() {
-    return this.prismaService.client.author.findMany();
+    return this.prismaService.client.author.findMany({     
+    });
   }
 
   async getAuthorById(id: number) {

@@ -11,9 +11,9 @@ import './styles.css';
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [author, setAuthor] = useState(null);
-  const [expandedBookId, setExpandedBookId] = useState(null);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [expandedBookId, setExpandedBookId] = useState(null); 
   const [showAddBookForm, setShowAddBookForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -102,7 +102,6 @@ const BookList = () => {
       <button className="form-button" onClick={() => setShowAddBookForm(!showAddBookForm)}>
         {showAddBookForm ? 'Hide Add Book Form' : 'Add Book'}
       </button>
-
       {showAddBookForm && <AddBook setBooks={setBooks} setShowAddBookForm={setShowAddBookForm} />}
       <ul className="book-list">
         {books.map((book) => (
@@ -116,8 +115,7 @@ const BookList = () => {
                 {author && <p>Author: {author.name}</p>}
                 <p>Published Year: {book.publishedYear}</p>
                 <p>Stock Count: {book.stockCount}</p>
-
-                <div className="book-details-buttons">
+                <div>
                   <button className="form-button" onClick={() => handleEdit(book.id)}>Edit</button>
                   <button className="delete-button" onClick={() => handleDelete(book.id)} >Delete</button>
                 </div>
@@ -133,7 +131,6 @@ const BookList = () => {
           onUpdate={handleUpdate}
         />
       )}
-
       <button className="change-button" onClick={handleShowAuthorList}>
         Show Author List
       </button>
