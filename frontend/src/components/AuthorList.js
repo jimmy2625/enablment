@@ -13,7 +13,8 @@ const AuthorList = () => {
   const [expandedAuthorId, setExpandedAuthorId] = useState(null);
   const [showAddAuthorForm, setShowAddAuthorForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-
+  const [books, setBooks] = useState([]);
+  const [author, setAuthor] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,11 +33,24 @@ const AuthorList = () => {
   const toggleAuthorDetails = async (authorId) => {
     try {
       setExpandedAuthorId((prevId) => (prevId === authorId ? null : authorId));
+  
+      if (expandedAuthorId !== authorId) {
+        const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
+        const author = authorResponse.data;
+  
+        setExpandedAuthorId(authorId);
+        setAuthor(author); // Set the author details
+  
+        const booksResponse = await axios.get(`http://localhost:3000/books?authorId=${authorId}`);
+        const authorBooks = booksResponse.data;
+  
+        setBooks(authorBooks);
+      }
     } catch (error) {
       console.error('Error toggling author details:', error);
     }
   };
-
+  
   const handleEditAuthor = () => {
     setShowEditForm(true);
   };
@@ -45,16 +59,18 @@ const AuthorList = () => {
     try {
       const response = await axios.get(`http://localhost:3000/authors/${expandedAuthorId}`);
       const updatedAuthor = response.data;
-  
+
       setAuthors((prevAuthors) =>
         prevAuthors.map((author) => (author.id === updatedAuthor.id ? updatedAuthor : author))
       );
 
+      const booksResponse = await axios.get(`http://localhost:3000/books?authorId=${expandedAuthorId}`);
+      const updatedAuthorBooks = booksResponse.data;
+      setBooks(updatedAuthorBooks);
     } catch (error) {
       console.error('Error updating author details', error);
     }
   };
-  
 
   const handleDeleteAuthor = async (authorId) => {
     const result = await Swal.fire({
@@ -65,16 +81,16 @@ const AuthorList = () => {
       confirmButtonText: 'Yes, delete it!',
       confirmButtonColor: '#ff0800',
     });
-  
+
     if (result.isConfirmed) {
       try {
         await axios.delete(`http://localhost:3000/authors/${authorId}`);
         setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
-  
+
         toast.success('Author has been deleted!', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
-          hideProgressBar: true
+          hideProgressBar: true,
         });
       } catch (error) {
         console.error('Error deleting author', error);
@@ -102,6 +118,16 @@ const AuthorList = () => {
             {expandedAuthorId === author.id && (
               <div className="book-details">
                 <p>Bio: {author.bio}</p>
+                <h3>List of Books:</h3>
+                <ul style={{ margin: '15px 0' }}>
+                  {books
+                    .filter((book) => book.authorId === expandedAuthorId)
+                    .map((book) => (
+                      <li key={book.id}>
+                        <strong>{book.title}</strong> - Published Year: {book.publishedYear}
+                      </li>
+                    ))}
+                </ul>
                 <div>
                   <button className="form-button" onClick={() => handleEditAuthor(author.id)}>Edit Author</button>
                   <button className="delete-button" onClick={() => handleDeleteAuthor(author.id)}>Delete Author</button>
