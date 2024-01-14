@@ -113,7 +113,7 @@ const AuthorList = () => {
         {authors.map((author) => (
           <li key={author.id} className="book-item">
             <div className="book-item-header" onClick={() => toggleAuthorDetails(author.id)}>
-              <span className="book-item-name">{author.name}</span>
+              <span className="book-item-title">{author.name}</span>
             </div>
             {expandedAuthorId === author.id && (
               <div className="book-details">
