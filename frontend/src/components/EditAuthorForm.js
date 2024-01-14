@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './styles.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
   const [author, setAuthor] = useState({
@@ -39,9 +41,15 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
         bio: author.bio,
       });
   
-      onUpdate(); // Trigger the parent component's update
+      onUpdate();
       onClose();
       setIsFormVisible(false);
+
+      toast.success('An author has been edited!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true
+      });
     } catch (error) {
       console.error('Error editing author:', error.response || error.message || error);
     }
@@ -77,7 +85,7 @@ const EditAuthorForm = ({ authorId, onClose, onUpdate }) => {
             <button type="button" className="save-changes-button" onClick={handleEditAuthor}>
               Save Changes
             </button>
-            <button type="button" className="cancel-button" onClick={handleCancel}>
+            <button type="button" className="delete-button" onClick={handleCancel}>
               Cancel
             </button>
           </form>

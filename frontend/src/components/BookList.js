@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import EditBookForm from './EditBookForm';
 import AddBook from './AddBook';
+import Swal from 'sweetalert2'; 
+import { toast, ToastContainer } from 'react-toastify';
 import './styles.css';
 
 const BookList = () => {
@@ -65,11 +67,28 @@ const BookList = () => {
   };
 
   const handleDelete = async (bookId) => {
-    try {
-      await axios.delete(`http://localhost:3000/books/${bookId}`);
-      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
-    } catch (error) {
-      console.error('Error deleting book', error);
+    const result = await Swal.fire({
+      title: 'Are you sure you want to delete the book?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: '#007bff',
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#ff0800',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:3000/books/${bookId}`);
+        setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+
+        toast.success('Book has been deleted!', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          hideProgressBar: true
+        });
+      } catch (error) {
+        console.error('Error deleting book', error);
+      }
     }
   };
 
@@ -115,9 +134,10 @@ const BookList = () => {
         />
       )}
 
-      <button className="form-button" onClick={handleShowAuthorList}>
+      <button className="change-button" onClick={handleShowAuthorList}>
         Show Author List
       </button>
+      <ToastContainer />
     </div>
   );
 };

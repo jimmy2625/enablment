@@ -1,8 +1,12 @@
 // AuthorList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import AddAuthor from './AddAuthor';
+import Swal from 'sweetalert2'; 
+import { toast, ToastContainer } from 'react-toastify';
 import EditAuthorForm from './EditAuthorForm';
+
 import './styles.css';
 
 const AuthorList = () => {
@@ -11,6 +15,8 @@ const AuthorList = () => {
   const [showAddAuthorForm, setShowAddAuthorForm] = useState(false);
   const [showEditAuthorForm, setShowEditAuthorForm] = useState(false);
   const [selectedAuthorId, setSelectedAuthorId] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAuthors = async () => {
@@ -48,23 +54,50 @@ const AuthorList = () => {
   };
 
   const handleDeleteAuthor = async (authorId) => {
-    try {
-      // Fetch the author to check for associated books
-      const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
-      const author = authorResponse.data;
+      const result = await Swal.fire({
+        title: 'Are you sure you want to delete the author and all the books assigned to that author?',
+        icon: 'warning',
+        showCancelButton: true,
+        cancelButtonColor: '#007bff',
+        confirmButtonText: 'Yes, delete it!',
+        confirmButtonColor: '#ff0800',
+      });
+  
+      if (result.isConfirmed) {
+        try {
+          // Fetch the author to get associated books
+          const authorResponse = await axios.get(`http://localhost:3000/authors/${authorId}`);
+          const author = authorResponse.data;
+      
+          if (author.books.length > 0) {
+            // Delete all books associated with the author
+            await Promise.all(
+              author.books.map(async (book) => {
+                await axios.delete(`http://localhost:3000/books/${book.id}`);
+              })
+            );
+          }
+      
+          // After deleting books, delete the author
+          await axios.delete(`http://localhost:3000/authors/${authorId}`);
+      
+          // Update the state to remove the author and collapse details
+          setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
+          setExpandedAuthorId(null);
 
-      if (author.books.length > 0) {
-        // Author has associated books, handle deletion accordingly
-        console.log('Author has associated books. Perform appropriate actions.');
-      } else {
-        // Author has no associated books, proceed with deletion
-        await axios.delete(`http://localhost:3000/authors/${authorId}`);
-        setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
-        setExpandedAuthorId(null); // Collapse details after deleting an author
-      }
-    } catch (error) {
-      console.error('Error deleting author:', error);
+          toast.success('Author and associated books has been deleted!', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            hideProgressBar: true
+          });
+        } catch (error) {
+          console.error('Error deleting author and associated books:', error);
+        }
     }
+  };
+  
+  const handleShowBookList = () => {
+    navigate('/');
   };
 
   return (
@@ -108,6 +141,10 @@ const AuthorList = () => {
           </li>
         ))}
       </ul>
+      <button className="change-button" onClick={handleShowBookList}>
+        Show Book List
+      </button>
+      <ToastContainer />
     </div>
   );
 };

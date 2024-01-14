@@ -1,6 +1,7 @@
 // AddAuthor.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import './styles.css';
 
 const AddAuthor = ({ setAuthors, setShowAddAuthorForm }) => {
@@ -30,7 +31,11 @@ const AddAuthor = ({ setAuthors, setShowAddAuthorForm }) => {
 
       setShowAddAuthorForm(false);
 
-      console.log('Author added successfully!');
+      toast.success('An author has been added!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true
+      });
     } catch (error) {
       console.error('Error adding author:', error);
     }

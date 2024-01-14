@@ -97,21 +97,6 @@
     background-color: #447913;
 }
 
-.cancel-button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
-}
-
 .delete-button {
     background-color: #dc3545;
     color: #fff;
@@ -125,6 +110,10 @@
   
 .delete-button:hover {
     background-color: #c82333;
+}
+
+.change-button {
+    background-color: #692c0293;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -132,4 +121,8 @@
     font-size: 14px;
     cursor: pointer;
     margin: 5px;
+}
+
+.change-button:hover {
+    background-color: #722f0354;
 }

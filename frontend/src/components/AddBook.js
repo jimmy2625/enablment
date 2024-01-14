@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import './styles.css';
 
 const AddBook = ({ setBooks, setShowAddBookForm }) => {
@@ -28,18 +29,19 @@ const AddBook = ({ setBooks, setShowAddBookForm }) => {
 
   const handleAddBook = async () => {
     try {
-      // Add the new book
       await axios.post('http://localhost:3000/books', newBook);
 
-      // Fetch the updated list of books
       const response = await axios.get('http://localhost:3000/books');
 
-      // Update the state in the parent component with the new list of books
       setBooks(response.data);
 
       setShowAddBookForm(false);
 
-      console.log('Book added successfully!');
+      toast.success('A book has been added!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true
+      });
     } catch (error) {
       console.error('Error adding book:', error);
     }

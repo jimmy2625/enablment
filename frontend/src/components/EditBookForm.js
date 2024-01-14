@@ -1,6 +1,7 @@
 // src/components/EditBookForm.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import './styles.css';
 
 const EditBookForm = ({ bookId, onClose, onUpdate }) => {
@@ -48,10 +49,16 @@ const EditBookForm = ({ bookId, onClose, onUpdate }) => {
     try {
       await axios.put(`http://localhost:3000/books/${bookId}`, book);
 
-      onUpdate(); // Trigger the parent component's update
+      onUpdate();
       onClose();
 
       setIsFormVisible(false);
+
+      toast.success('A book has been edited!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true
+      });
     } catch (error) {
       console.error('Error editing book:', error);
     }
@@ -117,7 +124,7 @@ const EditBookForm = ({ bookId, onClose, onUpdate }) => {
             <button type="button" className="save-changes-button" onClick={handleEditBook} >
               Save Changes
             </button>
-            <button type="button" className="cancel-button" onClick={handleCancel} >
+            <button type="button" className="delete-button" onClick={handleCancel} >
               Cancel
             </button>
           </form>
