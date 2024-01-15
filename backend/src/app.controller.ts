@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
 import { BooksService } from './books/books.service';
 import { AuthorsService } from './authors/authors.service';
 
@@ -13,53 +13,63 @@ export class AppController {
 
   @Get('/books')
   async getAllBooks() {
-    return this.booksService.getAllBooks();
+    return this.handleServiceCall(() => this.booksService.getAllBooks());
   }
 
   @Get('/books/:id')
   async getBookById(@Param('id') id: number) {
-    return this.booksService.getBookById(id);
+    return this.handleServiceCall(() => this.booksService.getBookById(id));
   }
 
   @Post('/books')
   async createBook(@Body() data: any) {
-    return this.booksService.createBook(data);
+    return this.handleServiceCall(() => this.booksService.createBook(data), HttpStatus.CREATED);
   }
 
   @Put('/books/:id')
   async updateBook(@Param('id') id: number, @Body() data: any) {
-    return this.booksService.updateBook(id, data);
+    return this.handleServiceCall(() => this.booksService.updateBook(id, data));
   }
 
   @Delete('/books/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteBook(@Param('id') id: number) {
-    return this.booksService.deleteBook(id);
+    return this.handleServiceCall(() => this.booksService.deleteBook(id));
   }
 
   // Authors Endpoints
 
   @Get('/authors')
   async getAllAuthors() {
-    return this.authorsService.getAllAuthors();
+    return this.handleServiceCall(() => this.authorsService.getAllAuthors());
   }
 
   @Get('/authors/:id')
   async getAuthorById(@Param('id') id: number) {
-    return this.authorsService.getAuthorById(id);
+    return this.handleServiceCall(() => this.authorsService.getAuthorById(id));
   }
 
   @Post('/authors')
   async createAuthor(@Body() data: any) {
-    return this.authorsService.createAuthor(data);
+    return this.handleServiceCall(() => this.authorsService.createAuthor(data), HttpStatus.CREATED);
   }
 
   @Put('/authors/:id')
   async updateAuthor(@Param('id') id: number, @Body() data: any) {
-    return this.authorsService.updateAuthor(id, data);
+    return this.handleServiceCall(() => this.authorsService.updateAuthor(id, data));
   }
 
   @Delete('/authors/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAuthor(@Param('id') id: number) {
-    return this.authorsService.deleteAuthor(id);
+    return this.handleServiceCall(() => this.authorsService.deleteAuthor(id));
+  }
+
+  private async handleServiceCall(serviceCall: () => Promise<any>, successStatus = HttpStatus.OK) {
+    try {
+      return await serviceCall();
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to process request');
+    }
   }
 }

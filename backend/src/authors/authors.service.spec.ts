@@ -63,7 +63,7 @@ describe('AuthorsService', () => {
 
   describe('updateAuthor', () => {
     it('should update an existing author', async () => {
-      const authorId = 1;
+      const authorId = 2;
       const authorData = { name: 'Updated Author', bio: 'super tester' };
       const updatedAuthor = { id: authorId, ...authorData };
 
@@ -75,7 +75,7 @@ describe('AuthorsService', () => {
     });
 
     it('should handle errors and throw an exception', async () => {
-      const authorId = 1;
+      const authorId = 2;
       const authorData = { name: 'Updated Author' };
 
       jest.spyOn(prismaService.client.author, 'update').mockRejectedValue(new Error('Some error'));
@@ -88,7 +88,7 @@ describe('AuthorsService', () => {
 
   describe('deleteAuthor', () => {
     it('should delete an existing author', async () => {
-      const authorId = 1;
+      const authorId = 2;
       const deletedAuthor = { id: authorId, name: 'Author 1', bio: 'jeg elsker unit tests' };
 
       jest.spyOn(prismaService.client.author, 'delete').mockResolvedValue(deletedAuthor);
@@ -99,7 +99,7 @@ describe('AuthorsService', () => {
     });
 
     it('should handle errors and throw an exception', async () => {
-      const authorId = 1;
+      const authorId = 2;
 
       jest.spyOn(prismaService.client.author, 'delete').mockRejectedValue(new Error('Some error'));
 

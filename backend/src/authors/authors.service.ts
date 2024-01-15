@@ -1,6 +1,6 @@
 // authors.service.ts
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -13,27 +13,58 @@ export class AuthorsService {
   }
 
   async getAuthorById(id: number) {
-    return this.prismaService.client.author.findUnique({
+    const author = await this.prismaService.client.author.findUnique({
       where: { id },
     });
+
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
+    }
+
+    return author;
   }
 
   async createAuthor(data: any) {
-    return this.prismaService.client.author.create({ data });
+    try {
+      return await this.prismaService.client.author.create({ data });
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to create author');
+    }
   }
 
   async updateAuthor(id: number, data: any) {
-    return this.prismaService.client.author.update({
-      where: { id },
-      data,
-    });
+    try {
+      const existingAuthor = await this.prismaService.client.author.findUnique({
+        where: { id },
+      });
+
+      if (!existingAuthor) {
+        throw new NotFoundException(`Author with ID ${id} not found`);
+      }
+
+      return await this.prismaService.client.author.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      throw new BadRequestException(error.message || 'Failed to update author');
+    }
   }
 
   async deleteAuthor(id: number) {
-    return this.prismaService.client.author.delete({
+    const existingAuthor = await this.prismaService.client.author.findUnique({
+      where: { id },
+    });
+
+    if (!existingAuthor) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
+    }
+
+    return await this.prismaService.client.author.delete({
       where: { id },
     });
   }
+
 
   async getBooksByAuthorId(authorId: number) {
     return this.prismaService.client.book.findMany({
