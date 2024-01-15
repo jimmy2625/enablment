@@ -25,13 +25,7 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-
-      - name: Generate Prisma client
-        run: npx prisma generate
-        working-directory: ./backend
-        
-      - name: Start backend
-        run: npm start &
+          npm run test --if-present
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -63,9 +57,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A40247556EA141C193B0E3E425EE2C8A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_86FEDBE3047640A7BE88C3F7F89FB5A6 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_135D3AAA12A34A73B13FF974894AAA86 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_32A61016E4EC40F58CC571840E4BAC0B }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8340004A10D24BCAAF34AA3D3ABEC5B2 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E0C86C3F48224572B021FFDBCA140CD9 }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
