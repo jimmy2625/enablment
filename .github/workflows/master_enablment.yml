@@ -36,7 +36,7 @@ jobs:
       - name: npm install, build frontend
         run: |
           npm install
-          npm start
+          npm start -- --port 3001
         working-directory: ./frontend
 
       - name: Zip artifact for deployment
