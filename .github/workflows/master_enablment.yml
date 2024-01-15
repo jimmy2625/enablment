@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Prisma client
         run: npx prisma generate
-        working-directory: /backend
+        working-directory: ./backend
 
       - name: Start backend
         run: npm start
