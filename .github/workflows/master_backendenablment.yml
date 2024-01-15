@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - FrontendEnablment
+name: Build and deploy Node.js app to Azure Web App - BackendEnablment
 
 on:
   push:
@@ -23,9 +23,15 @@ jobs:
 
       - name: npm install, build, and test
         run: |
-          cd frontend
           npm install
-          npm install sweetalert2
+          npm run build --if-present
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        working-directory: ./backend
+        
+      - name: Start backend
+        run: npm start &
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -57,15 +63,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_976FF22E5CFB45978913CFE282CCD242 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_FD4D7438B94E4F04998D2BA4CED4BD93 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_063E2378986D4E1282FB20E07DE6DC0A }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A40247556EA141C193B0E3E425EE2C8A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_86FEDBE3047640A7BE88C3F7F89FB5A6 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_135D3AAA12A34A73B13FF974894AAA86 }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'FrontendEnablment'
+          app-name: 'BackendEnablment'
           slot-name: 'Production'
           package: .
           
