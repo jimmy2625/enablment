@@ -1,7 +1,6 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, BadRequestException, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete } from '@nestjs/common';
 import { BooksService } from './books/books.service';
 import { AuthorsService } from './authors/authors.service';
-import { validateOrReject } from 'class-validator';
 
 @Controller()
 export class AppController {
@@ -24,31 +23,17 @@ export class AppController {
 
   @Post('/books')
   async createBook(@Body() data: any) {
-    try {
-      await this.validateBookData(data);
-      return this.booksService.createBook(data);
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.booksService.createBook(data);
   }
 
   @Put('/books/:id')
   async updateBook(@Param('id') id: number, @Body() data: any) {
-    try {
-      await this.validateBookData(data);
-      return this.booksService.updateBook(id, data);
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.booksService.updateBook(id, data);
   }
 
   @Delete('/books/:id')
   async deleteBook(@Param('id') id: number) {
-    try {
-      return this.booksService.deleteBook(id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
+    return this.booksService.deleteBook(id);
   }
 
   // Authors Endpoints
@@ -65,46 +50,16 @@ export class AppController {
 
   @Post('/authors')
   async createAuthor(@Body() data: any) {
-    try {
-      await this.validateAuthorData(data);
-      return this.authorsService.createAuthor(data);
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.authorsService.createAuthor(data);
   }
 
   @Put('/authors/:id')
   async updateAuthor(@Param('id') id: number, @Body() data: any) {
-    try {
-      await this.validateAuthorData(data);
-      return this.authorsService.updateAuthor(id, data);
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.authorsService.updateAuthor(id, data);
   }
 
   @Delete('/authors/:id')
   async deleteAuthor(@Param('id') id: number) {
-    try {
-      return this.authorsService.deleteAuthor(id);
-    } catch (error) {
-      throw new NotFoundException(error.message);
-    }
-  }
-
-  private async validateBookData(data: any) {
-    try {
-      await validateOrReject(data, { skipMissingProperties: true });
-    } catch (errors) {
-      throw errors;
-    }
-  }
-
-  private async validateAuthorData(data: any) {
-    try {
-      await validateOrReject(data, { skipMissingProperties: true });
-    } catch (errors) {
-      throw errors;
-    }
+    return this.authorsService.deleteAuthor(id);
   }
 }
