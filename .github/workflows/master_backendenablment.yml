@@ -25,6 +25,7 @@ jobs:
         run: |
           npm install
           npm run build --if-present
+          npm test
 
       - name: Generate Prisma client
         run: npx prisma generate
