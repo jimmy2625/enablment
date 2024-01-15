@@ -1,8 +1,8 @@
-// book.resolver.ts
-
 import { Resolver, Query, Mutation, Args, InputType, Field, Int } from '@nestjs/graphql';
 import { BooksService } from '../books/books.service';
 import { BookType } from './book.type';
+import { NotFoundException, BadRequestException, UsePipes, ValidationPipe } from '@nestjs/common';
+import { validateOrReject } from 'class-validator';
 
 @InputType()
 class CreateBookInput {
@@ -33,21 +33,60 @@ export class BookResolver {
 
   @Query(() => BookType)
   async book(@Args('id', { type: () => Int }) id: number) {
-    return this.booksService.getBookById(id);
+    const book = await this.booksService.getBookById(id);
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+    return book;
   }
 
   @Mutation(() => BookType)
+  @UsePipes(new ValidationPipe())
   async createBook(@Args('data') data: CreateBookInput) {
-    return this.booksService.createBook(data);
+    try {
+      await this.validateBookData(data);
+      return this.booksService.createBook(data);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Mutation(() => BookType)
+  @UsePipes(new ValidationPipe())
   async updateBook(@Args('id', { type: () => Int }) id: number, @Args('data') data: CreateBookInput) {
-    return this.booksService.updateBook(id, data);
+    try {
+      await this.validateBookData(data);
+
+      const existingBook = await this.booksService.getBookById(id);
+      if (!existingBook) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+
+      return this.booksService.updateBook(id, data);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   @Mutation(() => BookType)
   async deleteBook(@Args('id', { type: () => Int }) id: number) {
-    return this.booksService.deleteBook(id);
+    try {
+      const existingBook = await this.booksService.getBookById(id);
+      if (!existingBook) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+
+      return this.booksService.deleteBook(id);
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  private async validateBookData(data: CreateBookInput) {
+    try {
+      await validateOrReject(Object.assign(new CreateBookInput(), data), { skipMissingProperties: true });
+    } catch (errors) {
+      throw errors;
+    }
   }
 }

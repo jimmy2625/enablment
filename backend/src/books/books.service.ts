@@ -1,7 +1,6 @@
-// books.service.ts
-
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class BooksService {
@@ -12,25 +11,66 @@ export class BooksService {
   }
 
   async getBookById(id: number) {
-    return this.prismaService.client.book.findUnique({
+    const book = await this.prismaService.client.book.findUnique({
       where: { id },
     });
+
+    if (!book) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+
+    return book;
   }
 
   async createBook(data: any) {
-    return this.prismaService.client.book.create({ data });
+    try {
+      await this.validateBookData(data);
+      return this.prismaService.client.book.create({ data });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   async updateBook(id: number, data: any) {
-    return this.prismaService.client.book.update({
-      where: { id },
-      data,
-    });
+    try {
+      await this.validateBookData(data);
+
+      const existingBook = await this.prismaService.client.book.findUnique({
+        where: { id },
+      });
+
+      if (!existingBook) {
+        throw new NotFoundException(`Book with ID ${id} not found`);
+      }
+
+      return this.prismaService.client.book.update({
+        where: { id },
+        data,
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   async deleteBook(id: number) {
+    const existingBook = await this.prismaService.client.book.findUnique({
+      where: { id },
+    });
+
+    if (!existingBook) {
+      throw new NotFoundException(`Book with ID ${id} not found`);
+    }
+
     return this.prismaService.client.book.delete({
       where: { id },
     });
+  }
+
+  private async validateBookData(data: any) {
+    try {
+      await validateOrReject(data, { skipMissingProperties: true });
+    } catch (errors) {
+      throw errors;
+    }
   }
 }
