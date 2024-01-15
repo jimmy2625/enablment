@@ -12,6 +12,6 @@ export class AuthorType {
   @Field()
   bio: string;
 
-  @Field(() => [BookType], { nullable: true }) // Define the books field as an array of BookType
-  books?: BookType[]; // Add the books field to AuthorType
+  @Field(() => [BookType], { nullable: true }) 
+  books?: BookType[];
 }
