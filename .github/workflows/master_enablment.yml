@@ -33,7 +33,6 @@ jobs:
       - name: npm install, build frontend
         run: |
           npm install
-          npm run build --if-present
           npm start
         working-directory: ./frontend
         
