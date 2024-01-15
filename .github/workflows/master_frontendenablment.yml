@@ -26,7 +26,6 @@ jobs:
           cd frontend
           npm install
           npm install sweetalert2
-          npm start
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
