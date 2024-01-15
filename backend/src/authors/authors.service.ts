@@ -1,15 +1,15 @@
-// authors.service.ts
-
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
+import { CreateAuthorDto } from './dto/create-author.dto';
 
 @Injectable()
 export class AuthorsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getAllAuthors() {
-    return this.prismaService.client.author.findMany({     
-    });
+    return this.prismaService.client.author.findMany();
   }
 
   async getAuthorById(id: number) {
@@ -24,16 +24,19 @@ export class AuthorsService {
     return author;
   }
 
-  async createAuthor(data: any) {
+  async createAuthor(data: CreateAuthorDto) {
     try {
+      await this.validateAuthorData(data);
       return await this.prismaService.client.author.create({ data });
     } catch (error) {
       throw new BadRequestException(error.message || 'Failed to create author');
     }
   }
 
-  async updateAuthor(id: number, data: any) {
+  async updateAuthor(id: number, data: CreateAuthorDto) {
     try {
+      await this.validateAuthorData(data);
+
       const existingAuthor = await this.prismaService.client.author.findUnique({
         where: { id },
       });
@@ -65,12 +68,19 @@ export class AuthorsService {
     });
   }
 
-
   async getBooksByAuthorId(authorId: number) {
     return this.prismaService.client.book.findMany({
       where: {
         authorId: authorId,
       },
     });
+  }
+
+  private async validateAuthorData(data: CreateAuthorDto) {
+    const errors = await validate(data);
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors);
+    }
   }
 }

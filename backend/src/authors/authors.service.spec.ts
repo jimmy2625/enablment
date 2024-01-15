@@ -51,7 +51,7 @@ describe('AuthorsService', () => {
     });
 
     it('should handle errors and throw an exception', async () => {
-      const authorData = { name: 'New Author' };
+      const authorData = { name: 'New Author', bio: 'den bedste' };
 
       jest.spyOn(prismaService.client.author, 'create').mockRejectedValue(new Error('Some error'));
 
@@ -76,7 +76,7 @@ describe('AuthorsService', () => {
 
     it('should handle errors and throw an exception', async () => {
       const authorId = 2;
-      const authorData = { name: 'Updated Author' };
+      const authorData = { name: 'Updated Author', bio: 'den bedste' };
 
       jest.spyOn(prismaService.client.author, 'update').mockRejectedValue(new Error('Some error'));
 

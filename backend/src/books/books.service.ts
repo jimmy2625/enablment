@@ -1,7 +1,8 @@
 // books.service.ts
-
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { validate } from 'class-validator';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -23,16 +24,27 @@ export class BooksService {
     return book;
   }
 
-  async createBook(data: any) {
+  async createBook(data: CreateBookDto) {
     try {
-      return await this.prismaService.client.book.create({ data });
+      const prismaData = {
+        author: { connect: { id: data.authorId } },
+        title: data.title,
+        description: data.description,
+        publishedYear: data.publishedYear,
+        stockCount: data.stockCount,
+      };
+  
+      return await this.prismaService.client.book.create({ data: prismaData });
     } catch (error) {
       throw new BadRequestException(error.message || 'Failed to create book');
     }
   }
+  
 
-  async updateBook(id: number, data: any) {
+  async updateBook(id: number, data: CreateBookDto) {
     try {
+      await this.validateBookData(data);
+
       const existingBook = await this.prismaService.client.book.findUnique({
         where: { id },
       });
@@ -62,5 +74,13 @@ export class BooksService {
     return await this.prismaService.client.book.delete({
       where: { id },
     });
+  }
+
+  private async validateBookData(data: CreateBookDto) {
+    const errors = await validate(data);
+
+    if (errors.length > 0) {
+      throw new BadRequestException(errors);
+    }
   }
 }

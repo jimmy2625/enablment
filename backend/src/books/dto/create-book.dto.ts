@@ -1,29 +1,26 @@
-// src/books/dto/create-book.dto.ts
+import { IsString, IsNotEmpty, IsNumber, IsPositive, IsOptional } from 'class-validator';
+
 export class CreateBookDto {
-    title: string;
-    authorId: number;
-    description: string;
-    publishedYear: number;
-    stockCount: number;
-  }
-  
-  // src/books/dto/update-book.dto.ts
-  export class UpdateBookDto {
-    title?: string;
-    authorId?: number;
-    description?: string;
-    publishedYear?: number;
-    stockCount?: number;
-  }
-  
-  // src/authors/dto/create-author.dto.ts
-  export class CreateAuthorDto {
-    name: string;
-    bio: string;
-  }
-  
-  // src/authors/dto/update-author.dto.ts
-  export class UpdateAuthorDto {
-    name?: string;
-    bio?: string;
-  }  
+  @IsNotEmpty()
+  @IsString()
+  readonly title: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @IsPositive()
+  readonly authorId: number;
+
+  @IsOptional()
+  @IsString()
+  readonly description?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  readonly publishedYear?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  readonly stockCount?: number;
+}
