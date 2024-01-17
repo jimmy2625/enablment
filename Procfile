@@ -1,1 +1,1 @@
-web: npm run start & (cd frontend && npm start)
+web: npm run start && npx prisma generate --schema server/prisma/schema.prisma && (cd frontend && npm start)
