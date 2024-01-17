@@ -19,3 +19,5 @@ To test GraphQL API
     title
   }
 }
+
+![Alt Text](enablment/Skærmbillede 2024-01-17 kl. 14.39.23.jpg)
