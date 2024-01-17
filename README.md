@@ -20,4 +20,4 @@ To test GraphQL API
   }
 }
 
-![Alt Text](enablment/Skærmbillede 2024-01-17 kl. 14.39.23.jpg)
+![Alt Text](Azure_error.jpg)
