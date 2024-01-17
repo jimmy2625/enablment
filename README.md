@@ -7,3 +7,15 @@ Start the frontend React app to show and interact with the populated data
 - cd frontend
 - npm install
 - npm start
+
+To test the API using jest
+- npm test
+
+To test GraphQL API
+- go to http://localhost:3000/graphql
+- for example: query {
+  books {
+    id
+    title
+  }
+}
