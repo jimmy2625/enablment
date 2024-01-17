@@ -11,35 +11,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateBookDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateBookDto {
-}
+const graphql_1 = require("@nestjs/graphql");
+let CreateBookDto = class CreateBookDto {
+};
 exports.CreateBookDto = CreateBookDto;
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateBookDto.prototype, "title", void 0);
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateBookDto.prototype, "authorId", void 0);
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateBookDto.prototype, "description", void 0);
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateBookDto.prototype, "publishedYear", void 0);
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsPositive)(),
     __metadata("design:type", Number)
 ], CreateBookDto.prototype, "stockCount", void 0);
+exports.CreateBookDto = CreateBookDto = __decorate([
+    (0, graphql_1.InputType)()
+], CreateBookDto);
 //# sourceMappingURL=create-book.dto.js.map

@@ -18,31 +18,7 @@ const books_service_1 = require("../books/books.service");
 const book_type_1 = require("./book.type");
 const common_1 = require("@nestjs/common");
 const class_validator_1 = require("class-validator");
-let CreateBookInput = class CreateBookInput {
-};
-__decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], CreateBookInput.prototype, "title", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int),
-    __metadata("design:type", Number)
-], CreateBookInput.prototype, "authorId", void 0);
-__decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], CreateBookInput.prototype, "description", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int),
-    __metadata("design:type", Number)
-], CreateBookInput.prototype, "publishedYear", void 0);
-__decorate([
-    (0, graphql_1.Field)(() => graphql_1.Int),
-    __metadata("design:type", Number)
-], CreateBookInput.prototype, "stockCount", void 0);
-CreateBookInput = __decorate([
-    (0, graphql_1.InputType)()
-], CreateBookInput);
+const create_book_dto_1 = require("../books/dto/create-book.dto");
 let BookResolver = class BookResolver {
     constructor(booksService) {
         this.booksService = booksService;
@@ -93,7 +69,7 @@ let BookResolver = class BookResolver {
     }
     async validateBookData(data) {
         try {
-            await (0, class_validator_1.validateOrReject)(Object.assign(new CreateBookInput(), data), { skipMissingProperties: true });
+            await (0, class_validator_1.validateOrReject)(Object.assign(new create_book_dto_1.CreateBookDto(), data), { skipMissingProperties: true });
         }
         catch (errors) {
             throw errors;
@@ -119,7 +95,7 @@ __decorate([
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, graphql_1.Args)('data')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateBookInput]),
+    __metadata("design:paramtypes", [create_book_dto_1.CreateBookDto]),
     __metadata("design:returntype", Promise)
 ], BookResolver.prototype, "createBook", null);
 __decorate([
@@ -128,7 +104,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
     __param(1, (0, graphql_1.Args)('data')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, CreateBookInput]),
+    __metadata("design:paramtypes", [Number, create_book_dto_1.CreateBookDto]),
     __metadata("design:returntype", Promise)
 ], BookResolver.prototype, "updateBook", null);
 __decorate([

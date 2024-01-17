@@ -11,17 +11,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateAuthorDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateAuthorDto {
-}
+const graphql_1 = require("@nestjs/graphql");
+let CreateAuthorDto = class CreateAuthorDto {
+};
 exports.CreateAuthorDto = CreateAuthorDto;
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateAuthorDto.prototype, "name", void 0);
 __decorate([
+    (0, graphql_1.Field)(),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateAuthorDto.prototype, "bio", void 0);
+exports.CreateAuthorDto = CreateAuthorDto = __decorate([
+    (0, graphql_1.InputType)()
+], CreateAuthorDto);
 //# sourceMappingURL=create-author.dto.js.map

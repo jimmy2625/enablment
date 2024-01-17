@@ -1,11 +1,5 @@
 import { BooksService } from '../books/books.service';
-declare class CreateBookInput {
-    title: string;
-    authorId: number;
-    description: string;
-    publishedYear: number;
-    stockCount: number;
-}
+import { CreateBookDto } from '../books/dto/create-book.dto';
 export declare class BookResolver {
     private readonly booksService;
     constructor(booksService: BooksService);
@@ -25,7 +19,7 @@ export declare class BookResolver {
         publishedYear: number;
         stockCount: number;
     }>;
-    createBook(data: CreateBookInput): Promise<{
+    createBook(data: CreateBookDto): Promise<{
         id: number;
         title: string;
         authorId: number;
@@ -33,7 +27,7 @@ export declare class BookResolver {
         publishedYear: number;
         stockCount: number;
     }>;
-    updateBook(id: number, data: CreateBookInput): Promise<{
+    updateBook(id: number, data: CreateBookDto): Promise<{
         id: number;
         title: string;
         authorId: number;
@@ -51,4 +45,3 @@ export declare class BookResolver {
     }>;
     private validateBookData;
 }
-export {};

@@ -18,19 +18,7 @@ const authors_service_1 = require("../authors/authors.service");
 const author_type_1 = require("./author.type");
 const common_1 = require("@nestjs/common");
 const class_validator_1 = require("class-validator");
-let CreateAuthorInput = class CreateAuthorInput {
-};
-__decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], CreateAuthorInput.prototype, "name", void 0);
-__decorate([
-    (0, graphql_1.Field)(),
-    __metadata("design:type", String)
-], CreateAuthorInput.prototype, "bio", void 0);
-CreateAuthorInput = __decorate([
-    (0, graphql_1.InputType)()
-], CreateAuthorInput);
+const create_author_dto_1 = require("../authors/dto/create-author.dto");
 let AuthorResolver = class AuthorResolver {
     constructor(authorsService) {
         this.authorsService = authorsService;
@@ -81,7 +69,7 @@ let AuthorResolver = class AuthorResolver {
     }
     async validateAuthorData(data) {
         try {
-            await (0, class_validator_1.validateOrReject)(data, { skipMissingProperties: true });
+            await (0, class_validator_1.validateOrReject)(Object.assign(new create_author_dto_1.CreateAuthorDto(), data), { skipMissingProperties: true });
         }
         catch (errors) {
             throw errors;
@@ -107,7 +95,7 @@ __decorate([
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, graphql_1.Args)('data')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateAuthorInput]),
+    __metadata("design:paramtypes", [create_author_dto_1.CreateAuthorDto]),
     __metadata("design:returntype", Promise)
 ], AuthorResolver.prototype, "createAuthor", null);
 __decorate([
@@ -116,7 +104,7 @@ __decorate([
     __param(0, (0, graphql_1.Args)('id', { type: () => graphql_1.Int })),
     __param(1, (0, graphql_1.Args)('data')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, CreateAuthorInput]),
+    __metadata("design:paramtypes", [Number, create_author_dto_1.CreateAuthorDto]),
     __metadata("design:returntype", Promise)
 ], AuthorResolver.prototype, "updateAuthor", null);
 __decorate([

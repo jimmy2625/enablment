@@ -18,26 +18,26 @@ type BookType {
   title: String!
 }
 
-input CreateAuthorInput {
+input CreateAuthorDto {
   bio: String!
   name: String!
 }
 
-input CreateBookInput {
-  authorId: Int!
+input CreateBookDto {
+  authorId: Float!
   description: String!
-  publishedYear: Int!
-  stockCount: Int!
+  publishedYear: Float!
+  stockCount: Float!
   title: String!
 }
 
 type Mutation {
-  createAuthor(data: CreateAuthorInput!): AuthorType!
-  createBook(data: CreateBookInput!): BookType!
+  createAuthor(data: CreateAuthorDto!): AuthorType!
+  createBook(data: CreateBookDto!): BookType!
   deleteAuthor(id: Int!): AuthorType!
   deleteBook(id: Int!): BookType!
-  updateAuthor(data: CreateAuthorInput!, id: Int!): AuthorType!
-  updateBook(data: CreateBookInput!, id: Int!): BookType!
+  updateAuthor(data: CreateAuthorDto!, id: Int!): AuthorType!
+  updateBook(data: CreateBookDto!, id: Int!): BookType!
 }
 
 type Query {

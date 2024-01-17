@@ -1,8 +1,5 @@
 import { AuthorsService } from '../authors/authors.service';
-declare class CreateAuthorInput {
-    name: string;
-    bio: string;
-}
+import { CreateAuthorDto } from '../authors/dto/create-author.dto';
 export declare class AuthorResolver {
     private readonly authorsService;
     constructor(authorsService: AuthorsService);
@@ -16,12 +13,12 @@ export declare class AuthorResolver {
         name: string;
         bio: string;
     }>;
-    createAuthor(data: CreateAuthorInput): Promise<{
+    createAuthor(data: CreateAuthorDto): Promise<{
         id: number;
         name: string;
         bio: string;
     }>;
-    updateAuthor(id: number, data: CreateAuthorInput): Promise<{
+    updateAuthor(id: number, data: CreateAuthorDto): Promise<{
         id: number;
         name: string;
         bio: string;
@@ -33,4 +30,3 @@ export declare class AuthorResolver {
     }>;
     private validateAuthorData;
 }
-export {};
