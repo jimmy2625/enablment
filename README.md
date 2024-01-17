@@ -1,4 +1,4 @@
-Start the backend API by connecting the MySQL database with Prisma scheme. Establish REST endpoints
+Start the backend API by connecting the MySQL database with Prisma schema. Establish REST endpoints
 - npm install
 - npx prisma generate
 - npm start
