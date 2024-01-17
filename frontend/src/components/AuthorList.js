@@ -80,19 +80,33 @@ const AuthorList = () => {
       confirmButtonText: 'Yes, delete it!',
       confirmButtonColor: '#ff0800',
     });
-
+  
     if (result.isConfirmed) {
       try {
+        // Fetch the author's books
+        const booksResponse = await axios.get(`http://localhost:3000/books?authorId=${authorId}`);
+        const authorBooks = booksResponse.data;
+  
+        // Delete each book
+        await Promise.all(
+          authorBooks.map(async (book) => {
+            await axios.delete(`http://localhost:3000/books/${book.id}`);
+          })
+        );
+  
+        // After deleting all books, delete the author
         await axios.delete(`http://localhost:3000/authors/${authorId}`);
+  
+        // Update the state to remove the deleted author
         setAuthors((prevAuthors) => prevAuthors.filter((author) => author.id !== authorId));
-
-        toast.success('Author has been deleted!', {
+  
+        toast.success('Author and associated books have been deleted!', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,
         });
       } catch (error) {
-        console.error('Error deleting author', error);
+        console.error('Error deleting author and books', error);
       }
     }
   };
