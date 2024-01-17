@@ -3,24 +3,7 @@ import { BooksService } from '../books/books.service';
 import { BookType } from './book.type';
 import { NotFoundException, BadRequestException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { validateOrReject } from 'class-validator';
-
-@InputType()
-class CreateBookInput {
-  @Field()
-  title: string;
-
-  @Field(() => Int)
-  authorId: number;
-
-  @Field()
-  description: string;
-
-  @Field(() => Int)
-  publishedYear: number;
-
-  @Field(() => Int)
-  stockCount: number;
-}
+import { CreateBookDto } from '../books/dto/create-book.dto';
 
 @Resolver(() => BookType)
 export class BookResolver {
@@ -42,7 +25,7 @@ export class BookResolver {
 
   @Mutation(() => BookType)
   @UsePipes(new ValidationPipe())
-  async createBook(@Args('data') data: CreateBookInput) {
+  async createBook(@Args('data') data: CreateBookDto) {
     try {
       await this.validateBookData(data);
       return this.booksService.createBook(data);
@@ -53,7 +36,7 @@ export class BookResolver {
 
   @Mutation(() => BookType)
   @UsePipes(new ValidationPipe())
-  async updateBook(@Args('id', { type: () => Int }) id: number, @Args('data') data: CreateBookInput) {
+  async updateBook(@Args('id', { type: () => Int }) id: number, @Args('data') data: CreateBookDto) {
     try {
       await this.validateBookData(data);
 
@@ -82,9 +65,9 @@ export class BookResolver {
     }
   }
 
-  private async validateBookData(data: CreateBookInput) {
+  private async validateBookData(data: CreateBookDto) {
     try {
-      await validateOrReject(Object.assign(new CreateBookInput(), data), { skipMissingProperties: true });
+      await validateOrReject(Object.assign(new CreateBookDto(), data), { skipMissingProperties: true });
     } catch (errors) {
       throw errors;
     }

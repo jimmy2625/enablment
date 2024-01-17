@@ -3,15 +3,7 @@ import { AuthorsService } from '../authors/authors.service';
 import { AuthorType } from './author.type';
 import { NotFoundException, BadRequestException, UsePipes, ValidationPipe } from '@nestjs/common';
 import { validateOrReject } from 'class-validator';
-
-@InputType()
-class CreateAuthorInput {
-  @Field()
-  name: string;
-
-  @Field()
-  bio: string;
-}
+import { CreateAuthorDto } from '../authors/dto/create-author.dto';
 
 @Resolver(() => AuthorType)
 export class AuthorResolver {
@@ -33,7 +25,7 @@ export class AuthorResolver {
 
   @Mutation(() => AuthorType)
   @UsePipes(new ValidationPipe())
-  async createAuthor(@Args('data') data: CreateAuthorInput) {
+  async createAuthor(@Args('data') data: CreateAuthorDto) {
     try {
       await this.validateAuthorData(data);
       return this.authorsService.createAuthor(data);
@@ -44,7 +36,7 @@ export class AuthorResolver {
 
   @Mutation(() => AuthorType)
   @UsePipes(new ValidationPipe())
-  async updateAuthor(@Args('id', { type: () => Int }) id: number, @Args('data') data: CreateAuthorInput) {
+  async updateAuthor(@Args('id', { type: () => Int }) id: number, @Args('data') data: CreateAuthorDto) {
     try {
       await this.validateAuthorData(data);
 
@@ -73,9 +65,9 @@ export class AuthorResolver {
     }
   }
 
-  private async validateAuthorData(data: any) {
+  private async validateAuthorData(data: CreateAuthorDto) {
     try {
-      await validateOrReject(data, { skipMissingProperties: true });
+      await validateOrReject(Object.assign(new CreateAuthorDto(), data), { skipMissingProperties: true });
     } catch (errors) {
       throw errors;
     }

@@ -120,7 +120,7 @@ describe('BooksService', () => {
 
   describe('updateBook', () => {
     it('should update an existing book', async () => {
-      const bookId = 1;
+      const bookId = 4;
       const bookData = {
         title: 'Updated Book',
         authorId: 1,
@@ -139,7 +139,7 @@ describe('BooksService', () => {
     });
 
     it('should handle errors and throw an exception', async () => {
-      const bookId = 1;
+      const bookId = 4;
       const bookData = {
         title: 'Updated Book',
         authorId: 1,
@@ -158,7 +158,7 @@ describe('BooksService', () => {
 
   describe('deleteBook', () => {
     it('should delete an existing book', async () => {
-      const bookId = 1;
+      const bookId = 4;
       const deletedBook = {
         id: bookId,
         title: 'Book 1',
@@ -176,7 +176,7 @@ describe('BooksService', () => {
     });
 
     it('should handle errors and throw an exception', async () => {
-      const bookId = 1;
+      const bookId = 4;
 
       jest.spyOn(prismaService.client.book, 'delete').mockRejectedValue(new Error('Some error'));
 
